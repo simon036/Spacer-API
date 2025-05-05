@@ -1,0 +1,45 @@
+/auth/google/login:
+  get:
+    tags:
+      - Auth
+    summary: Start Google OAuth login flow
+    description: Redirects user to Google for authentication. On success, returns JWT and user info.
+    responses:
+      302:
+        description: Redirect to Google OAuth
+      200:
+        description: Login successful, returns JWT and user info
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                access_token:
+                  type: string
+                user:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    email:
+                      type: string
+                    role:
+                      type: string
+                    is_active:
+                      type: boolean
+      400:
+        description: Google OAuth error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
+
+/auth/google/logout:
+  get:
+    tags:
+      - Auth
+    summary: Logout from Google OAuth session
+    description: Clears the OAuth session.
+    responses:
+      302:
+        description: Redirect to Google login

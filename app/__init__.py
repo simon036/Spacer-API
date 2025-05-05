@@ -4,6 +4,7 @@ from .config import Config
 from .extensions import db, migrate, jwt, ma, swagger, cors, limiter, cache
 from .routes import auth_bp, spaces_bp, bookings_bp, users_bp
 from .routes.admin import admin_bp
+from .routes.google_auth import google_bp, google_auth_bp
 
 def create_app():
     app = Flask(__name__)
@@ -18,6 +19,10 @@ def create_app():
     cors.init_app(app, origins=app.config.get("CORS_ORIGINS", "*").split(","))
     limiter.init_app(app)
     cache.init_app(app)
+
+    # Register Flask-Dance Google blueprint
+    app.register_blueprint(google_bp, url_prefix="/api/auth/google")
+    app.register_blueprint(google_auth_bp, url_prefix="/api/auth/google")
 
     # Blueprints
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
